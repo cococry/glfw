@@ -1,11 +1,11 @@
 project "GLFW"
 	kind "StaticLib"
 	language "C"
-	staticruntime "off"	
-	
-	targetdir ("bin/" .. project_output .. "/%{prj.name}")
-	objdir ("bin-int/" .. project_output .. "/%{prj.name}")
-	
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
 	files
 	{
 		"include/GLFW/glfw3.h",
