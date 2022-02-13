@@ -1,128 +1,53 @@
-workspace "Blind"
-	architecture "x64"
-
-	configurations
-	{
-		"Distribution",
-		"Release",
-		"Debug"
-	}
-
-project_output = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
-Dependency = {}
-Dependency["GLFW"] = "Blind/vendor/GLFW/include"
-
-include "Blind/vendor/GLFW"
-
-project "Blind"
-	location "Blind"
-	kind "SharedLib"
-	language "C++"
-	cppdialect "C++17";
+project "GLFW"
+	kind "StaticLib"
+	language "C"
 	staticruntime "on"
-
-
-	targetdir ("bin/" .. project_output .. "/%{prj.name}")
-	objdir ("bin-int/" .. project_output .. "/%{prj.name}")
-
-	pchheader "blindpch.h"
-	pchsource "Blind/src/blindpch.cpp"
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"include/GLFW/glfw3.h",
+		"include/GLFW/glfw3native.h",
+		"src/glfw_config.h",
+		"src/context.c",
+		"src/init.c",
+		"src/input.c",
+		"src/monitor.c",
+		"src/vulkan.c",
+		"src/window.c"
 	}
-
-	includedirs
-	{
-		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/src",
-		"%{Dependency.GLFW}"
-	}
-	
-	links
-	{
-		"GLFW",
-		"opengl32.lib"
-	}
-
 	filter "system:windows"
 		systemversion "latest"
 
-		defines 
+		files
 		{
-			"PLATFORM_WINDOWS",
-			"BLIND_DLL",
-			"GLFW_INCLUDE_NONE",
+			"src/win32_init.c",
+			"src/win32_joystick.c",
+			"src/win32_monitor.c",
+			"src/win32_time.c",
+			"src/win32_thread.c",
+			"src/win32_window.c",
+			"src/wgl_context.c",
+			"src/egl_context.c",
+			"src/osmesa_context.c"
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. project_output .. "/Game")
+		defines 
+		{ 
+			"_GLFW_WIN32",
+			"_CRT_SECURE_NO_WARNINGS"
 		}
+
+		links
+		{
+			"Dwmapi.lib"
+		}
+
 	filter "configurations:Debug"
-		defines "BLIND_DEBUG"
 		runtime "Debug"
-		defines "BLIND_ENABLE_ASSERTS"
 		symbols "on"
-
-	filter "configurations:Release"
-		defines "BLIND_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Distribution"
-		defines "BLIND_DIST"
-		runtime "Release"
-		optimize "on"
-
-project "Game"
-	location "Game"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17";
-	staticruntime "on"
-
-	targetdir ("bin/" .. project_output .. "/%{prj.name}")
-	objdir ("bin-int/" .. project_output .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs
-	{
-		"Blind/vendor/spdlog/include",
-		"Blind/src"
-	}
-	links
-	{
-		"Blind"
-	}
-	filter "system:windows"
-		cppdialect "C++17"
-
-		defines 
-		{
-			"PLATFORM_WINDOWS",
-		}
 	
-	filter "configurations:Debug"
-		defines "BLIND_DEBUG"
-		runtime "Debug"
-		defines "BLIND_ENABLE_ASSERTS"
-		symbols "on"
-
 	filter "configurations:Release"
-		defines "BLIND_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Distribution"
-		defines "BLIND_DIST"
 		runtime "Release"
 		optimize "on"
