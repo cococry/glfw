@@ -24,7 +24,7 @@ section](https://discourse.glfw.org/c/support) of the forum, under the [Stack
 Overflow tag](https://stackoverflow.com/questions/tagged/glfw) or [Game
 Development tag](https://gamedev.stackexchange.com/questions/tagged/glfw) on
 Stack Exchange or in the IRC channel `#glfw` on
-[Libera.Chat](https://libera.chat/).
+[Freenode](http://freenode.net/).
 
 Questions about the design or implementation of GLFW or about future plans
 should be asked in the [dev section](https://discourse.glfw.org/c/dev) of the
